@@ -2,17 +2,24 @@ package com.bitco.recurrent.database;
 
 import com.bitco.recurrent.model.TransactionType;
 
+import java.util.Date;
+
 import androidx.room.TypeConverter;
 
+/**
+ * Used to convert enums into a storable entry for the database.
+ */
 public class Converters {
 
+    // Transaction Types
+
     @TypeConverter
-    String fromTransactionType(TransactionType type) {
+    public static String fromTransactionType(TransactionType type) {
         return type.toString();
     }
 
     @TypeConverter
-    TransactionType toTransactionType(String type) {
+    public static TransactionType toTransactionType(String type) {
         if (type.toUpperCase().equals("INCOME")) {
             return TransactionType.INCOME;
         }
@@ -21,5 +28,4 @@ public class Converters {
         }
         return TransactionType.NONE;
     }
-
 }
