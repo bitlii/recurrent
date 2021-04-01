@@ -47,7 +47,7 @@ public class Item {
      */
     public int getDaysUntilNextOccurrence() {
         DateTime date = new DateTime();
-        lastOccurrence.plusDays(interval);
+        lastOccurrence = lastOccurrence.plusDays(interval);
         Days daysUntil = Days.daysBetween(date, lastOccurrence);
 
         return daysUntil.getDays();

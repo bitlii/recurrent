@@ -59,8 +59,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.name.setText(item.getName());
         holder.description.setText(item.getDescription());
         holder.amount.setText(String.valueOf(item.getAmount()));
-        holder.nextOccurrence.setText(String.valueOf(item.getDaysUntilNextOccurrence()));
-        holder.transactionType.setText(item.getType().toString());
+        holder.nextOccurrence.setText(item.getDaysUntilNextOccurrence() + " Days");
+        holder.transactionType.setText(item.getType().name());
     }
 
     @Override

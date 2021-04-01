@@ -29,7 +29,7 @@ public class Converters {
         if (type.toUpperCase().equals("INCOME")) {
             return TransactionType.INCOME;
         }
-        else if (type.toUpperCase().equals("PAYMENT")) {
+        else if (type.toUpperCase().equals("EXPENSE")) {
             return TransactionType.EXPENSE;
         }
         return TransactionType.NONE;
