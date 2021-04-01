@@ -17,7 +17,7 @@ public class Converters {
 
     private final static String DATE_PATTERN = "YYYY-MM-dd";
 
-    // Transaction Types
+    // ----- Transaction Types
 
     @TypeConverter
     public static String fromTransactionType(TransactionType type) {
@@ -34,6 +34,8 @@ public class Converters {
         }
         return TransactionType.NONE;
     }
+
+    // ----- Date Time
 
     @TypeConverter
     public static String fromDateTime(DateTime dateTime) {

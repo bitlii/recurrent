@@ -1,5 +1,8 @@
 package com.bitco.recurrent.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bitco.recurrent.database.Converters;
 
 import org.joda.time.DateTime;
@@ -16,10 +19,10 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 @Entity
-public class Item {
+public class Item implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
 
     private String name;
     private String description;
@@ -37,8 +40,14 @@ public class Item {
         this.description = description;
         this.amount = amount;
         this.type = type;
-        this.lastOccurrence = lastOccurrence;
         this.interval = interval;
+
+        DateTime now = new DateTime();
+        if (now.isBefore(lastOccurrence)) {
+            this.lastOccurrence = lastOccurrence.minusDays(interval);
+        } else {
+            this.lastOccurrence = lastOccurrence;
+        }
     }
 
     /**
@@ -46,20 +55,21 @@ public class Item {
      * @return day until next occurrence.
      */
     public int getDaysUntilNextOccurrence() {
-        DateTime date = new DateTime();
-        lastOccurrence = lastOccurrence.plusDays(interval);
-        Days daysUntil = Days.daysBetween(date, lastOccurrence);
+        DateTime now = new DateTime();
+
+        DateTime nextOccurrence = lastOccurrence.plusDays(interval);
+        Days daysUntil = Days.daysBetween(now, nextOccurrence);
 
         return daysUntil.getDays();
     }
 
     // --- GETTERS & SETTERS
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -110,4 +120,45 @@ public class Item {
     public void setInterval(int interval) {
         this.interval = interval;
     }
+
+
+    // ----- Parcelable Methods
+    public Item(Parcel source) {
+        this.id = source.readLong();
+        this.name = source.readString();
+        this.description = source.readString();
+        this.amount = source.readDouble();
+        this.type = TransactionType.valueOf(source.readString());
+        this.lastOccurrence = DateTime.parse(source.readString());
+        this.interval = source.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeLong(id);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeDouble(amount);
+        dest.writeString(type.toString());
+        dest.writeString(lastOccurrence.toString());
+        dest.writeInt(interval);
+    }
+
+    public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel source) {
+            return new Item(source);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
+
 }
