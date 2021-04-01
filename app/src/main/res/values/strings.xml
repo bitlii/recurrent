@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">recurrent</string>
+    <string name="placeholder_item_name">Item Name</string>
+    <string name="placeholder_item_description">A short description of the item.</string>
+    <string name="placeholder_item_amount">29.99</string>
+    <string name="item_next">Next</string>
+    <string name="placeholder_item_next_occurrence">29 days</string>
+    <string name="income">IN</string>
+    <string name="expense">OUT</string>
 </resources>
