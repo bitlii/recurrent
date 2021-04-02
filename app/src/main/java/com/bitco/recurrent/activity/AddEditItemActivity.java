@@ -20,8 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AddItemActivity extends AppCompatActivity {
-    public static final String ADD_ITEM_DATA = "newItem";
+public class AddEditItemActivity extends AppCompatActivity {
+    public static final String EXTRA_SAVED_ITEM = "SAVED_ITEM";
 
     private EditText editName;
     private EditText editDescription;
@@ -30,12 +30,13 @@ public class AddItemActivity extends AppCompatActivity {
     private EditText editInterval;
     private Spinner spinnerTransactionType;
 
+    private long itemId = -1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Item");
 
         editName = findViewById(R.id.editItemName);
         editDescription = findViewById(R.id.editItemDescription);
@@ -45,6 +46,24 @@ public class AddItemActivity extends AppCompatActivity {
         spinnerTransactionType = findViewById(R.id.spinnerTransactionType);
         spinnerTransactionType.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values()));
 
+        Intent intent = getIntent();
+        if (intent.hasExtra(MainActivity.EXTRA_EDIT_ITEM)) {
+            setTitle("Edit Text");
+
+            Item item = intent.getParcelableExtra(MainActivity.EXTRA_EDIT_ITEM);
+            assert item != null;
+            itemId = item.getId();
+
+            editName.setText(item.getName());
+            editDescription.setText(item.getDescription());
+            editAmount.setText(String.valueOf(item.getAmount()));
+            editInterval.setText(String.valueOf(item.getInterval()));
+            editStartDate.setText(item.getLastOccurrence().toString());
+            spinnerTransactionType.setSelection(item.getType().ordinal());
+        }
+        else {
+            setTitle("Add Item");
+        }
 
     }
 
@@ -52,7 +71,7 @@ public class AddItemActivity extends AppCompatActivity {
      * Create a new item based off the input given on the activity screen.
      * Sets a new intent with the new item and finishes activity.
      */
-    private void addItem() {
+    private void saveItem() {
         String name = editName.getText().toString();
         String description = editDescription.getText().toString();
         double amount = Double.parseDouble(editAmount.getText().toString());
@@ -64,9 +83,12 @@ public class AddItemActivity extends AppCompatActivity {
         TransactionType transactionType = TransactionType.valueOf(typeString);
 
         Item newItem = new Item(name, description, amount, transactionType, startDateTime, interval);
+        if (itemId != -1) {
+            newItem.setId(itemId);
+        }
 
         Intent intent = new Intent();
-        intent.putExtra("newItem", newItem);
+        intent.putExtra(EXTRA_SAVED_ITEM, newItem);
 
         setResult(RESULT_OK, intent);
         finish();
@@ -84,7 +106,7 @@ public class AddItemActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.saveItem) {
-            addItem();
+            saveItem();
             return true;
         }
         return super.onOptionsItemSelected(item);

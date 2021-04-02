@@ -24,6 +24,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final int ADD_ITEM_REQUEST = 1;
+    public static final int EDIT_ITEM_REQUEST = 2;
+    public static final String EXTRA_EDIT_ITEM = "EDIT_ITEM";
 
     private ItemViewModel itemViewModel;
 
@@ -55,13 +57,13 @@ public class MainActivity extends AppCompatActivity {
         buttonAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddItemActivity.class);
+                Intent intent = new Intent(view.getContext(), AddEditItemActivity.class);
                 startActivityForResult(intent, ADD_ITEM_REQUEST);
             }
         });
 
         // Card movement.
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -70,8 +72,19 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                itemViewModel.delete(itemAdapter.getItemAtPos(viewHolder.getAdapterPosition()));
-                Toast.makeText(MainActivity.this, "Item deleted.", Toast.LENGTH_SHORT).show();
+                // Delete
+                if (direction == ItemTouchHelper.RIGHT) {
+                    itemViewModel.delete(itemAdapter.getItemAtPos(viewHolder.getAdapterPosition()));
+                    Toast.makeText(MainActivity.this, "Item deleted.", Toast.LENGTH_SHORT).show();
+                }
+                // Edit
+                else if (direction == ItemTouchHelper.LEFT) {
+                    Item item = itemAdapter.getItemAtPos(viewHolder.getAdapterPosition());
+                    itemAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                    Intent intent = new Intent(MainActivity.this, AddEditItemActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_EDIT_ITEM, item);
+                    startActivityForResult(intent, EDIT_ITEM_REQUEST);
+                }
             }
         }).attachToRecyclerView(recycler);
 
@@ -82,8 +95,13 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ADD_ITEM_REQUEST && resultCode == RESULT_OK) {
-            Item newItem = data.getParcelableExtra(AddItemActivity.ADD_ITEM_DATA);
+            Item newItem = data.getParcelableExtra(AddEditItemActivity.EXTRA_SAVED_ITEM);
             itemViewModel.insert(newItem);
         }
+        else if (requestCode == EDIT_ITEM_REQUEST && resultCode == RESULT_OK) {
+            Item editedItem = data.getParcelableExtra(AddEditItemActivity.EXTRA_SAVED_ITEM);
+            itemViewModel.update(editedItem);
+        }
+
     }
 }
