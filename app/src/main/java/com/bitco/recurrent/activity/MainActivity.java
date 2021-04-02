@@ -1,15 +1,18 @@
 package com.bitco.recurrent.activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bitco.recurrent.R;
 import com.bitco.recurrent.adapter.ItemAdapter;
@@ -56,6 +59,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, ADD_ITEM_REQUEST);
             }
         });
+
+        // Card movement.
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                itemViewModel.delete(itemAdapter.getItemAtPos(viewHolder.getAdapterPosition()));
+                Toast.makeText(MainActivity.this, "Item deleted.", Toast.LENGTH_SHORT).show();
+            }
+        }).attachToRecyclerView(recycler);
 
     }
 

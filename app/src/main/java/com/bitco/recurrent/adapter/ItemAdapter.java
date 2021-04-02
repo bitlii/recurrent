@@ -68,8 +68,22 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         return itemList.size();
     }
 
+    /**
+     * Set a new list of items as the displayed list in the recycler and notify observers.
+     * @param itemList List of items to replace the old list.
+     */
     public void setItemList(List<Item> itemList) {
         this.itemList = itemList;
         notifyDataSetChanged();
     }
+
+    /**
+     * Get the item object at a given position.
+     * @param pos of item to get.
+     * @return Item object at the given position.
+     */
+    public Item getItemAtPos(int pos) {
+        return itemList.get(pos);
+    }
+
 }
