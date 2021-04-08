@@ -2,11 +2,8 @@ package com.bitco.recurrent.database;
 
 import com.bitco.recurrent.model.TransactionType;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import androidx.room.TypeConverter;
 
@@ -15,7 +12,7 @@ import androidx.room.TypeConverter;
  */
 public class Converters {
 
-    private final static String DATE_PATTERN = "YYYY-MM-dd";
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
 
     // ----- Transaction Types
 
@@ -35,17 +32,16 @@ public class Converters {
         return TransactionType.NONE;
     }
 
-    // ----- Date Time
+    // ----- LocalDate
 
     @TypeConverter
-    public static String fromDateTime(DateTime dateTime) {
-        return dateTime.toString(DATE_PATTERN);
+    public static String fromDateTime(LocalDate date) {
+        return date.toString();
     }
 
     @TypeConverter
-    public static DateTime toDateTime(String date) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("YYYY-MM-dd");
-        return DateTime.parse(date, formatter);
+    public static LocalDate toDateTime(String date) {
+        return LocalDate.parse(date, DATE_FORMAT);
     }
 
 }

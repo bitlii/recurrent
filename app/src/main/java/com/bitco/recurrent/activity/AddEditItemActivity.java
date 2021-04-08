@@ -1,34 +1,44 @@
 package com.bitco.recurrent.activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.bitco.recurrent.R;
-import com.bitco.recurrent.database.Converters;
+import com.bitco.recurrent.fragment.DatePickerFragment;
 import com.bitco.recurrent.model.Item;
 import com.bitco.recurrent.model.TransactionType;
 
-import org.joda.time.DateTime;
+
+import java.time.LocalDate;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
-public class AddEditItemActivity extends AppCompatActivity {
+public class AddEditItemActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static final String EXTRA_SAVED_ITEM = "SAVED_ITEM";
 
     private EditText editName;
     private EditText editDescription;
     private EditText editAmount;
-    private EditText editStartDate;
     private EditText editInterval;
     private Spinner spinnerTransactionType;
+    private TextView textDate;
+    private Button buttonEditDate;
+
+    private LocalDate setDate;
 
     private long itemId = -1;
 
@@ -41,7 +51,9 @@ public class AddEditItemActivity extends AppCompatActivity {
         editName = findViewById(R.id.editItemName);
         editDescription = findViewById(R.id.editItemDescription);
         editAmount = findViewById(R.id.editAmount);
-        editStartDate = findViewById(R.id.editStartDate);
+        buttonEditDate = findViewById(R.id.buttonEditDate);
+        textDate = findViewById(R.id.textDate);
+
         editInterval = findViewById(R.id.editInterval);
         spinnerTransactionType = findViewById(R.id.spinnerTransactionType);
         spinnerTransactionType.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values()));
@@ -58,13 +70,30 @@ public class AddEditItemActivity extends AppCompatActivity {
             editDescription.setText(item.getDescription());
             editAmount.setText(String.valueOf(item.getAmount()));
             editInterval.setText(String.valueOf(item.getInterval()));
-            editStartDate.setText(item.getLastOccurrence().toString());
+            textDate.setText(item.getLastOccurrence().toString());
+            setDate = item.getLastOccurrence();
             spinnerTransactionType.setSelection(item.getType().ordinal());
         }
         else {
             setTitle("Add Item");
+            textDate.setText(LocalDate.now().toString());
         }
 
+        buttonEditDate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                DialogFragment newDateFrag = new DatePickerFragment();
+                newDateFrag.show(getSupportFragmentManager(), "datePicker");
+            }
+        });
+
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        setDate = LocalDate.of(year, month+1, day);
+        textDate.setText(setDate.toString());
     }
 
     /**
@@ -77,12 +106,10 @@ public class AddEditItemActivity extends AppCompatActivity {
         double amount = Double.parseDouble(editAmount.getText().toString());
         int interval = Integer.parseInt(editInterval.getText().toString());
 
-        String startDateString = editStartDate.getText().toString();
-        DateTime startDateTime = Converters.toDateTime(startDateString);
         String typeString = spinnerTransactionType.getSelectedItem().toString();
         TransactionType transactionType = TransactionType.valueOf(typeString);
 
-        Item newItem = new Item(name, description, amount, transactionType, startDateTime, interval);
+        Item newItem = new Item(name, description, amount, transactionType, setDate, interval);
         if (itemId != -1) {
             newItem.setId(itemId);
         }

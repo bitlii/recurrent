@@ -5,14 +5,8 @@ import android.os.Parcelable;
 
 import com.bitco.recurrent.database.Converters;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -32,17 +26,17 @@ public class Item implements Parcelable {
     private TransactionType type;
 
     @TypeConverters(Converters.class)
-    private DateTime lastOccurrence; // last date of occurrence. format is YYYY-MM-DD
+    private LocalDate lastOccurrence; // last date of occurrence. format is YYYY-MM-DD
     private int interval; // time between each occurrence.
 
-    public Item(String name, String description, double amount, TransactionType type, DateTime lastOccurrence, int interval) {
+    public Item(String name, String description, double amount, TransactionType type, LocalDate lastOccurrence, int interval) {
         this.name = name;
         this.description = description;
         this.amount = amount;
         this.type = type;
         this.interval = interval;
 
-        DateTime now = new DateTime();
+        LocalDate now = LocalDate.now();
         if (now.isBefore(lastOccurrence)) {
             this.lastOccurrence = lastOccurrence.minusDays(interval);
         } else {
@@ -55,12 +49,10 @@ public class Item implements Parcelable {
      * @return day until next occurrence.
      */
     public int getDaysUntilNextOccurrence() {
-        DateTime now = new DateTime();
+        LocalDate now = LocalDate.now();
 
-        DateTime nextOccurrence = lastOccurrence.plusDays(interval);
-        Days daysUntil = Days.daysBetween(now, nextOccurrence);
-
-        return daysUntil.getDays();
+        LocalDate nextOccurrence = lastOccurrence.plusDays(interval);
+        return (int) ChronoUnit.DAYS.between(now, nextOccurrence);
     }
 
     // --- GETTERS & SETTERS
@@ -105,11 +97,11 @@ public class Item implements Parcelable {
         this.type = type;
     }
 
-    public DateTime getLastOccurrence() {
+    public LocalDate getLastOccurrence() {
         return lastOccurrence;
     }
 
-    public void setLastOccurrence(DateTime lastOccurrence) {
+    public void setLastOccurrence(LocalDate lastOccurrence) {
         this.lastOccurrence = lastOccurrence;
     }
 
@@ -129,7 +121,7 @@ public class Item implements Parcelable {
         this.description = source.readString();
         this.amount = source.readDouble();
         this.type = TransactionType.valueOf(source.readString());
-        this.lastOccurrence = DateTime.parse(source.readString());
+        this.lastOccurrence = LocalDate.parse(source.readString());
         this.interval = source.readInt();
     }
 
