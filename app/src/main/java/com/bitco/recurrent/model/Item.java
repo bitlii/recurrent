@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.bitco.recurrent.database.Converters;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import androidx.room.Entity;
@@ -41,6 +42,15 @@ public class Item implements Parcelable {
             this.lastOccurrence = lastOccurrence.minusDays(interval);
         } else {
             this.lastOccurrence = lastOccurrence;
+        }
+    }
+
+    public void updateOccurrence() {
+        LocalDate now = LocalDate.now();
+        LocalDate next = lastOccurrence.plusDays(interval);
+
+        if (now.isAfter(next)) {
+            this.lastOccurrence = next;
         }
     }
 

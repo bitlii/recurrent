@@ -20,6 +20,10 @@
         <activity
             android:name=".activity.AddEditItemActivity"
             android:parentActivityName=".activity.MainActivity" />
+        <receiver
+            android:name=".utils.BroadcastManager"
+            android:enabled="true" />
     </application>
+
 
 </manifest>
