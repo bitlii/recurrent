@@ -9,13 +9,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -113,6 +116,20 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra(MainActivity.EXTRA_EDIT_ITEM, item);
                     startActivityForResult(intent, EDIT_ITEM_REQUEST);
                 }
+            }
+
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .addSwipeRightBackgroundColor(getColor(R.color.colorDelete))
+                        .addSwipeRightActionIcon(R.drawable.ic_delete)
+                        .addSwipeLeftBackgroundColor(getColor(R.color.colorEdit))
+                        .addSwipeLeftActionIcon(R.drawable.ic_edit)
+                        .create()
+                        .decorate();
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(recycler);
 
