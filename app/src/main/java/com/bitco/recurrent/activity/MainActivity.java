@@ -72,10 +72,21 @@ public class MainActivity extends AppCompatActivity {
 
         itemViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(ItemViewModel.class);
         itemViewModel.getAllItems().observe(this, new Observer<List<Item>>() {
-
             @Override
             public void onChanged(List<Item> itemList) {
                 itemAdapter.setItemList(itemList);
+            }
+        });
+
+        // Update last occurrences date of each item, then remove the observe to prevent it occurring again and again.
+        itemViewModel.getAllItems().observe(this, new Observer<List<Item>>() {
+            @Override
+            public void onChanged(List<Item> itemList) {
+                for (Item item: itemList) {
+                    item.updateOccurrence();
+                    itemViewModel.update(item);
+                }
+                itemViewModel.getAllItems().removeObserver(this);
             }
         });
 
@@ -106,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }).attachToRecyclerView(recycler);
 
 
+//        Notifications Testing.
 //        Intent intent = new Intent(this, BroadcastManager.class);
 //        PendingIntent pending = PendingIntent.getBroadcast(this, 42, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 //        AlarmManager manager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
@@ -130,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (requestCode == EDIT_ITEM_REQUEST && resultCode == RESULT_OK) {
             Item editedItem = data.getParcelableExtra(AddEditItemActivity.EXTRA_SAVED_ITEM);
+            editedItem.updateOccurrence();
             itemViewModel.update(editedItem);
         }
 

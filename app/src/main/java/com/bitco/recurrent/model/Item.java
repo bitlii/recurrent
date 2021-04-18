@@ -45,12 +45,16 @@ public class Item implements Parcelable {
         }
     }
 
+    /**
+     * Update the occurrence to match the latest last occurrence of the item.
+     */
     public void updateOccurrence() {
         LocalDate now = LocalDate.now();
         LocalDate next = lastOccurrence.plusDays(interval);
 
-        if (now.isAfter(next)) {
+        while (now.isAfter(next)) {
             this.lastOccurrence = next;
+            next = lastOccurrence.plusDays(interval);
         }
     }
 

@@ -27,6 +27,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * Activity class that handles the adding a new or editing an existing item.
+ */
 public class AddEditItemActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     public static final String EXTRA_SAVED_ITEM = "SAVED_ITEM";
 
@@ -59,6 +62,7 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         spinnerTransactionType.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values()));
 
         Intent intent = getIntent();
+        // If the activity was started by an edit event.
         if (intent.hasExtra(MainActivity.EXTRA_EDIT_ITEM)) {
             setTitle("Edit Text");
 
