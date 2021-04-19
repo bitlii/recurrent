@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (requestCode == EDIT_ITEM_REQUEST && resultCode == RESULT_OK) {
             Item editedItem = data.getParcelableExtra(AddEditItemActivity.EXTRA_SAVED_ITEM);
-            editedItem.updateOccurrence();
             itemViewModel.update(editedItem);
         }
 

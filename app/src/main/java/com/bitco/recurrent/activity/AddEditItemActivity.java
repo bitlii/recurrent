@@ -18,6 +18,7 @@ import com.bitco.recurrent.R;
 import com.bitco.recurrent.fragment.DatePickerFragment;
 import com.bitco.recurrent.model.Item;
 import com.bitco.recurrent.model.TransactionType;
+import com.google.android.material.textfield.TextInputLayout;
 
 
 import java.time.LocalDate;
@@ -51,15 +52,22 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         setContentView(R.layout.activity_add_item);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
-        editName = findViewById(R.id.editItemName);
-        editDescription = findViewById(R.id.editItemDescription);
-        editAmount = findViewById(R.id.editAmount);
+        TextInputLayout nameLayout = findViewById(R.id.editItemName);
+        TextInputLayout descriptionLayout = findViewById(R.id.editItemDescription);
+        TextInputLayout amountLayout = findViewById(R.id.editAmount);
+        TextInputLayout intervalLayout = findViewById(R.id.editInterval);
+
+        editName = nameLayout.getEditText();
+        editDescription = descriptionLayout.getEditText();
+        editAmount = amountLayout.getEditText();
+        editInterval = intervalLayout.getEditText();
+
         buttonEditDate = findViewById(R.id.buttonEditDate);
         textDate = findViewById(R.id.textDate);
 
-        editInterval = findViewById(R.id.editInterval);
         spinnerTransactionType = findViewById(R.id.spinnerTransactionType);
         spinnerTransactionType.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values()));
+        spinnerTransactionType.setSelection(0);
 
         Intent intent = getIntent();
         // If the activity was started by an edit event.
@@ -117,6 +125,8 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         if (itemId != -1) {
             newItem.setId(itemId);
         }
+
+        newItem.updateOccurrence();
 
         Intent intent = new Intent();
         intent.putExtra(EXTRA_SAVED_ITEM, newItem);
