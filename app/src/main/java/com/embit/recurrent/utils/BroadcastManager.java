@@ -1,11 +1,11 @@
-package com.bitco.recurrent.utils;
+package com.embit.recurrent.utils;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.bitco.recurrent.R;
+import com.embit.recurrent.R;
 
 import androidx.core.app.NotificationCompat;
 

@@ -1,6 +1,6 @@
-package com.bitco.recurrent.dao;
+package com.embit.recurrent.dao;
 
-import com.bitco.recurrent.model.Item;
+import com.embit.recurrent.model.Item;
 
 import java.util.List;
 

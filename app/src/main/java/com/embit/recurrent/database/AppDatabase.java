@@ -1,11 +1,11 @@
-package com.bitco.recurrent.database;
+package com.embit.recurrent.database;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.bitco.recurrent.dao.ItemDao;
-import com.bitco.recurrent.model.Item;
-import com.bitco.recurrent.model.TransactionType;
+import com.embit.recurrent.dao.ItemDao;
+import com.embit.recurrent.model.Item;
+import com.embit.recurrent.model.TransactionType;
 
 import java.time.LocalDate;
 

@@ -1,4 +1,4 @@
-package com.bitco.recurrent.activity;
+package com.embit.recurrent.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -8,16 +8,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bitco.recurrent.R;
-import com.bitco.recurrent.fragment.DatePickerFragment;
-import com.bitco.recurrent.model.Item;
-import com.bitco.recurrent.model.TransactionType;
+import com.embit.recurrent.R;
+import com.embit.recurrent.fragment.DatePickerFragment;
+import com.embit.recurrent.model.Item;
+import com.embit.recurrent.model.TransactionType;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 
@@ -38,9 +40,8 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
     private EditText editDescription;
     private EditText editAmount;
     private EditText editInterval;
-    private Spinner spinnerTransactionType;
-    private TextView textDate;
-    private Button buttonEditDate;
+    private TextInputLayout spinnerLayout;
+    private TextInputLayout editDateLayout;
 
     private LocalDate setDate;
 
@@ -61,18 +62,17 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         editDescription = descriptionLayout.getEditText();
         editAmount = amountLayout.getEditText();
         editInterval = intervalLayout.getEditText();
+        editDateLayout = findViewById(R.id.editDate);
 
-        buttonEditDate = findViewById(R.id.buttonEditDate);
-        textDate = findViewById(R.id.textDate);
-
-        spinnerTransactionType = findViewById(R.id.spinnerTransactionType);
-        spinnerTransactionType.setAdapter(new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values()));
-        spinnerTransactionType.setSelection(0);
+        spinnerLayout = findViewById(R.id.spinnerTransactionType);
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values());
+        ((AutoCompleteTextView) spinnerLayout.getEditText()).setAdapter(adapter);
+        ((AutoCompleteTextView) spinnerLayout.getEditText()).setListSelection(0);
 
         Intent intent = getIntent();
         // If the activity was started by an edit event.
         if (intent.hasExtra(MainActivity.EXTRA_EDIT_ITEM)) {
-            setTitle("Edit Text");
+            setTitle("Edit Item");
 
             Item item = intent.getParcelableExtra(MainActivity.EXTRA_EDIT_ITEM);
             assert item != null;
@@ -82,16 +82,18 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
             editDescription.setText(item.getDescription());
             editAmount.setText(String.valueOf(item.getAmount()));
             editInterval.setText(String.valueOf(item.getInterval()));
-            textDate.setText(item.getLastOccurrence().toString());
+            editDateLayout.getEditText().setText(item.getLastOccurrence().toString());
             setDate = item.getLastOccurrence();
-            spinnerTransactionType.setSelection(item.getType().ordinal());
+            ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(((AutoCompleteTextView) spinnerLayout.getEditText()).getAdapter().getItem(item.getType().ordinal()).toString());
         }
         else {
             setTitle("Add Item");
-            textDate.setText(LocalDate.now().toString());
+            editDateLayout.getEditText().setText(LocalDate.now().toString());
+            setDate = LocalDate.now();
+            ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(((AutoCompleteTextView) spinnerLayout.getEditText()).getAdapter().getItem(0).toString());
         }
 
-        buttonEditDate.setOnClickListener(new View.OnClickListener() {
+        editDateLayout.setEndIconOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -100,12 +102,13 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
             }
         });
 
+
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         setDate = LocalDate.of(year, month+1, day);
-        textDate.setText(setDate.toString());
+        editDateLayout.getEditText().setText(setDate.toString());
     }
 
     /**
@@ -118,8 +121,8 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         double amount = Double.parseDouble(editAmount.getText().toString());
         int interval = Integer.parseInt(editInterval.getText().toString());
 
-        String typeString = spinnerTransactionType.getSelectedItem().toString();
-        TransactionType transactionType = TransactionType.valueOf(typeString);
+        TransactionType transactionType = TransactionType.valueOf(((AutoCompleteTextView) spinnerLayout.getEditText()).getText().toString());
+
 
         Item newItem = new Item(name, description, amount, transactionType, setDate, interval);
         if (itemId != -1) {

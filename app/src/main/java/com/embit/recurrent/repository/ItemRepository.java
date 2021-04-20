@@ -1,11 +1,11 @@
-package com.bitco.recurrent.repository;
+package com.embit.recurrent.repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
 
-import com.bitco.recurrent.dao.ItemDao;
-import com.bitco.recurrent.database.AppDatabase;
-import com.bitco.recurrent.model.Item;
+import com.embit.recurrent.dao.ItemDao;
+import com.embit.recurrent.database.AppDatabase;
+import com.embit.recurrent.model.Item;
 
 import java.util.List;
 

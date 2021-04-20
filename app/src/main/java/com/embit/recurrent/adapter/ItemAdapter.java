@@ -1,12 +1,12 @@
-package com.bitco.recurrent.adapter;
+package com.embit.recurrent.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bitco.recurrent.R;
-import com.bitco.recurrent.model.Item;
+import com.embit.recurrent.R;
+import com.embit.recurrent.model.Item;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;

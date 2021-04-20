@@ -1,6 +1,6 @@
-package com.bitco.recurrent.database;
+package com.embit.recurrent.database;
 
-import com.bitco.recurrent.model.TransactionType;
+import com.embit.recurrent.model.TransactionType;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

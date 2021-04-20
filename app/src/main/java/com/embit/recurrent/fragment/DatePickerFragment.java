@@ -1,4 +1,4 @@
-package com.bitco.recurrent.fragment;
+package com.embit.recurrent.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

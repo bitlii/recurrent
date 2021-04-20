@@ -1,4 +1,4 @@
-package com.bitco.recurrent.model;
+package com.embit.recurrent.model;
 
 /**
  * Enum of what kind of transaction the item is doing.

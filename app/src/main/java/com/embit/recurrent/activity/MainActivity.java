@@ -1,9 +1,8 @@
-package com.bitco.recurrent.activity;
+package com.embit.recurrent.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -12,11 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Build;
@@ -24,15 +20,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bitco.recurrent.R;
-import com.bitco.recurrent.adapter.ItemAdapter;
-import com.bitco.recurrent.model.Item;
-import com.bitco.recurrent.model.ItemViewModel;
-import com.bitco.recurrent.utils.BroadcastManager;
+import com.embit.recurrent.R;
+import com.embit.recurrent.adapter.ItemAdapter;
+import com.embit.recurrent.model.Item;
+import com.embit.recurrent.model.ItemViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.List;
 
 /**

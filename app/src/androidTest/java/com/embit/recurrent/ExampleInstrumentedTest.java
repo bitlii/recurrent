@@ -1,4 +1,4 @@
-package com.bitco.recurrent;
+package com.embit.recurrent;
 
 import android.content.Context;
 

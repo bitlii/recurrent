@@ -1,12 +1,11 @@
-package com.bitco.recurrent.model;
+package com.embit.recurrent.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.bitco.recurrent.database.Converters;
+import com.embit.recurrent.database.Converters;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import androidx.room.Entity;

@@ -1,8 +1,8 @@
-package com.bitco.recurrent.model;
+package com.embit.recurrent.model;
 
 import android.app.Application;
 
-import com.bitco.recurrent.repository.ItemRepository;
+import com.embit.recurrent.repository.ItemRepository;
 
 import java.util.List;
 
