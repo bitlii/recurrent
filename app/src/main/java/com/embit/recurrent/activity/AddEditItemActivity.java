@@ -116,6 +116,11 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
      * Sets a new intent with the new item and finishes activity.
      */
     private void saveItem() {
+
+        if (!validateFields()) {
+            return;
+        }
+
         String name = editName.getText().toString();
         String description = editDescription.getText().toString();
         double amount = Double.parseDouble(editAmount.getText().toString());
@@ -136,6 +141,27 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
 
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private boolean validateFields() {
+        boolean validated = true;
+
+        if (editName.getText().toString().equals("")) {
+            editName.setError("Required field.");
+            validated = false;
+        }
+
+        if (editAmount.getText().toString().equals("")) {
+            editAmount.setError("Required field.");
+            validated = false;
+        }
+
+        if (editInterval.getText().toString().equals("")) {
+            editInterval.setError("Required field.");
+            validated = false;
+        }
+
+        return validated;
     }
 
     // ----- Action Bar Menu
