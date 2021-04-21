@@ -66,8 +66,6 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
 
         spinnerLayout = findViewById(R.id.spinnerTransactionType);
         ArrayAdapter adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values());
-        ((AutoCompleteTextView) spinnerLayout.getEditText()).setAdapter(adapter);
-        ((AutoCompleteTextView) spinnerLayout.getEditText()).setListSelection(0);
 
         Intent intent = getIntent();
         // If the activity was started by an edit event.
@@ -84,14 +82,15 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
             editInterval.setText(String.valueOf(item.getInterval()));
             editDateLayout.getEditText().setText(item.getLastOccurrence().toString());
             setDate = item.getLastOccurrence();
-            ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(((AutoCompleteTextView) spinnerLayout.getEditText()).getAdapter().getItem(item.getType().ordinal()).toString());
+            ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(adapter.getItem(item.getType().ordinal()).toString());
         }
         else {
             setTitle("Add Item");
             editDateLayout.getEditText().setText(LocalDate.now().toString());
             setDate = LocalDate.now();
-            ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(((AutoCompleteTextView) spinnerLayout.getEditText()).getAdapter().getItem(0).toString());
+            ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(adapter.getItem(0).toString());
         }
+        ((AutoCompleteTextView) spinnerLayout.getEditText()).setAdapter(adapter); // Set adapter after to fix android bug.
 
         editDateLayout.setEndIconOnClickListener(new View.OnClickListener() {
 
