@@ -1,7 +1,6 @@
 package com.embit.recurrent.repository;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import com.embit.recurrent.dao.ItemDao;
 import com.embit.recurrent.database.AppDatabase;
@@ -9,12 +8,12 @@ import com.embit.recurrent.model.Item;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
+import io.reactivex.Flowable;
 
 public class ItemRepository {
 
     private ItemDao itemDao;
-    private LiveData<List<Item>> allItems;
+    private Flowable<List<Item>> allItems;
 
     public ItemRepository(Application app) {
         AppDatabase db = AppDatabase.getInstance(app);
@@ -23,78 +22,38 @@ public class ItemRepository {
     }
 
     public void insert(Item item) {
-        new InsertItemAsync(itemDao).execute(item);
+        itemDao.insert(item);
     }
 
     public void update(Item item) {
-        new UpdateItemAsync(itemDao).execute(item);
+        itemDao.update(item);
     }
 
     public void delete(Item item) {
-        new DeleteItemAsync(itemDao).execute(item);
+        itemDao.delete(item);
     }
 
     public void deleteAll() {
-        new DeleteAllItemsAsync(itemDao).execute();
+        itemDao.deleteAll();
     }
 
-    public LiveData<List<Item>> getAllItems() {
+    public Flowable<List<Item>> getAllItems() {
         return allItems;
     }
 
-    public static class InsertItemAsync extends AsyncTask<Item, Void, Void> {
-        private ItemDao itemDao;
+    public Flowable<List<Item>> getAllItemsByAmount() {
+        return itemDao.getAllByAmount();
 
-        private InsertItemAsync(ItemDao itemDao) {
-            this.itemDao = itemDao;
-        }
-
-        @Override
-        protected Void doInBackground(Item... items) {
-            itemDao.insert(items[0]);
-            return null;
-        }
     }
 
-    public static class UpdateItemAsync extends AsyncTask<Item, Void, Void> {
-        private ItemDao itemDao;
+    public Flowable<List<Item>> getAllItemsByName() {
+        return itemDao.getAllByName();
 
-        private UpdateItemAsync(ItemDao itemDao) {
-            this.itemDao = itemDao;
-        }
-
-        @Override
-        protected Void doInBackground(Item... items) {
-            itemDao.update(items[0]);
-            return null;
-        }
     }
 
-    public static class DeleteItemAsync extends AsyncTask<Item, Void, Void> {
-        private ItemDao itemDao;
+    public Flowable<List<Item>> getAllItemsByNextOccurrence() {
+        return itemDao.getAllByNextOccurrence();
 
-        private DeleteItemAsync(ItemDao itemDao) {
-            this.itemDao = itemDao;
-        }
-
-        @Override
-        protected Void doInBackground(Item... items) {
-            itemDao.delete(items[0]);
-            return null;
-        }
     }
 
-    public static class DeleteAllItemsAsync extends AsyncTask<Void, Void, Void> {
-        private ItemDao itemDao;
-
-        private DeleteAllItemsAsync(ItemDao itemDao) {
-            this.itemDao = itemDao;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            itemDao.deleteAll();
-            return null;
-        }
-    }
 }

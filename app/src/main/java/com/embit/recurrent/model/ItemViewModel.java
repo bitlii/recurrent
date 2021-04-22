@@ -8,12 +8,12 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
+import io.reactivex.Flowable;
 
 public class ItemViewModel extends AndroidViewModel {
 
     private ItemRepository repository;
-    private LiveData<List<Item>> allItems;
+    private Flowable<List<Item>> allItems;
 
     public ItemViewModel(@NonNull Application application) {
         super(application);
@@ -38,7 +38,22 @@ public class ItemViewModel extends AndroidViewModel {
         repository.deleteAll();
     }
 
-    public LiveData<List<Item>> getAllItems() {
+    public Flowable<List<Item>> getAllItems() {
+        return getAllItemsByName(); // default for now - soon i should use the last used sort.
+    }
+
+    public Flowable<List<Item>> getAllItemsByAmount() {
+        allItems = repository.getAllItemsByAmount();
+        return allItems;
+    }
+
+    public Flowable<List<Item>> getAllItemsByName() {
+        allItems = repository.getAllItemsByName();
+        return allItems;
+    }
+
+    public Flowable<List<Item>> getAllItemsByNextOccurrence() {
+        allItems = repository.getAllItemsByNextOccurrence();
         return allItems;
     }
 

@@ -4,18 +4,27 @@ import com.embit.recurrent.model.Item;
 
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+import io.reactivex.Flowable;
 
 @Dao
 public interface ItemDao {
 
     @Query("SELECT * FROM Item")
-    LiveData<List<Item>> getAll();
+    Flowable<List<Item>> getAll();
+
+    @Query("SELECT * FROM Item ORDER BY amount ASC")
+    Flowable<List<Item>> getAllByAmount();
+
+    @Query("SELECT * FROM Item ORDER BY name ASC")
+    Flowable<List<Item>> getAllByName();
+
+    @Query("SELECT * FROM Item ORDER BY DATE(lastOccurrence, '+'||interval||' days') ASC")
+    Flowable<List<Item>> getAllByNextOccurrence();
 
     @Insert
     void insert(Item item);
