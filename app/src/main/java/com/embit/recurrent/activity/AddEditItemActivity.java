@@ -57,15 +57,15 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         TextInputLayout descriptionLayout = findViewById(R.id.editItemDescription);
         TextInputLayout amountLayout = findViewById(R.id.editAmount);
         TextInputLayout intervalLayout = findViewById(R.id.editInterval);
+        editDateLayout = findViewById(R.id.editDate);
+
+        spinnerLayout = findViewById(R.id.spinnerTransactionType);
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values());
 
         editName = nameLayout.getEditText();
         editDescription = descriptionLayout.getEditText();
         editAmount = amountLayout.getEditText();
         editInterval = intervalLayout.getEditText();
-        editDateLayout = findViewById(R.id.editDate);
-
-        spinnerLayout = findViewById(R.id.spinnerTransactionType);
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values());
 
         Intent intent = getIntent();
         // If the activity was started by an edit event.
@@ -93,7 +93,6 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         ((AutoCompleteTextView) spinnerLayout.getEditText()).setAdapter(adapter); // Set adapter after to fix android bug.
 
         editDateLayout.setEndIconOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 DialogFragment newDateFrag = new DatePickerFragment();
@@ -104,11 +103,20 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
 
     }
 
+
+    /**
+     * Called when the DatePickerFragment completes and sets a new date.
+     * @param datePicker the DatePicker fragment.
+     * @param year selected year
+     * @param month selected month
+     * @param day selected day
+     */
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         setDate = LocalDate.of(year, month+1, day);
         editDateLayout.getEditText().setText(setDate.toString());
     }
+
 
     /**
      * Create a new item based off the input given on the activity screen.
@@ -129,7 +137,7 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
 
 
         Item newItem = new Item(name, description, amount, transactionType, setDate, interval);
-        if (itemId != -1) {
+        if (itemId != -1) { // New Item
             newItem.setId(itemId);
         }
 
@@ -142,6 +150,10 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         finish();
     }
 
+    /**
+     * Checks if all of the required fields are filled out.
+     * @return true if all fields are filled out - false otherwise.
+     */
     private boolean validateFields() {
         boolean validated = true;
 

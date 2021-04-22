@@ -12,6 +12,9 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+/**
+ * Class that represents an item entity.
+ */
 @Entity
 public class Item implements Parcelable {
 

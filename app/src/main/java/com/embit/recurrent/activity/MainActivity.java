@@ -3,13 +3,11 @@ package com.embit.recurrent.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Completable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -22,7 +20,6 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,10 +33,6 @@ import com.embit.recurrent.model.ItemViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Main activity of the app.
@@ -82,12 +75,6 @@ public class MainActivity extends AppCompatActivity {
         recycler.setAdapter(itemAdapter);
 
         itemViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(ItemViewModel.class);
-//        itemViewModel.getAllItems().observe(this, new Observer<List<Item>>() {
-//            @Override
-//            public void onChanged(List<Item> itemList) {
-//                itemAdapter.setItemList(itemList);
-//            }
-//        });
 
         getItemsDisposable = itemViewModel.getAllItems()
                 .subscribeOn(Schedulers.io())
