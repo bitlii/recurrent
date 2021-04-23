@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -20,6 +21,8 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +35,9 @@ import com.embit.recurrent.model.Item;
 import com.embit.recurrent.model.ItemViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
+import java.util.concurrent.Callable;
 
 
 /**
@@ -50,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private ItemAdapter itemAdapter;
 
     private Disposable getItemsDisposable;
+    private Disposable itemUpdateOccurrenceDisposable;
 
 
     @Override
@@ -57,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        System.out.println("WHERE IS THIS AAAAAAAAAAAA");
         // Add new item.
         FloatingActionButton buttonAddItem = findViewById(R.id.fabAddItem);
         buttonAddItem.setOnClickListener(new View.OnClickListener() {
@@ -76,21 +84,21 @@ public class MainActivity extends AppCompatActivity {
 
         itemViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(ItemViewModel.class);
 
+        itemUpdateOccurrenceDisposable = itemViewModel.getAllItems().toObservable().firstElement().subscribe(itemList -> {
+            Log.d("Item Update Disposable", "Updating Item Occurrences.");
+            for (Item item: itemList) {
+                item.updateOccurrence();
+                Completable.fromRunnable(() -> itemViewModel.update(item))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe();
+            }
+        });
+
         getItemsDisposable = itemViewModel.getAllItems()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(itemList -> itemAdapter.setItemList(itemList), Throwable::printStackTrace);
-
-        Disposable disposable = itemViewModel.getAllItems()
-                                            .subscribeOn(Schedulers.io())
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(itemList -> {
-                                                for (Item item: itemList) {
-                                                    item.updateOccurrence();
-                                                    itemViewModel.update(item);
-                                                }
-                                            });
-        disposable.dispose();
 
 
         // Card movement that does actions depending on swiping direction.
@@ -178,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 popupMenu.show();
             }
+
         });
 
 
@@ -240,11 +249,15 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        itemUpdateOccurrenceDisposable.dispose();
         getItemsDisposable.dispose();
     }
 }

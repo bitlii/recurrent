@@ -8,8 +8,8 @@ android {
         applicationId "com.bitco.recurrent"
         minSdkVersion 26
         targetSdkVersion 29
-        versionCode 3
-        versionName "beta-3"
+        versionCode 4
+        versionName "beta-4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
