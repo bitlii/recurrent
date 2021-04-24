@@ -52,9 +52,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            itemDao.insert(new Item("Spark", "Phone Bill", 30.00, TransactionType.EXPENSE, LocalDate.now(), 30));
-            itemDao.insert(new Item("Snap Fitness", "Gym", 34.50, TransactionType.EXPENSE, LocalDate.parse("2021-04-05"), 5));
-            itemDao.insert(new Item("City Fitness", "Gym again.", 14.95, TransactionType.EXPENSE, LocalDate.parse("2021-04-15"), 14));
+            itemDao.insert(new Item("An Item", "Swipe left to edit, swipe right to delete.", 30.00, TransactionType.EXPENSE, LocalDate.now(), 30));
             return null;
         }
     }
