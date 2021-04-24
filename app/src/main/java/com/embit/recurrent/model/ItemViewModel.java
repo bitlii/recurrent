@@ -1,7 +1,10 @@
 package com.embit.recurrent.model;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
+import com.embit.recurrent.R;
 import com.embit.recurrent.repository.ItemRepository;
 
 import java.util.List;
@@ -39,20 +42,44 @@ public class ItemViewModel extends AndroidViewModel {
     }
 
     public Flowable<List<Item>> getAllItems() {
-        return getAllItemsByName(); // default for now - soon i should use the last used sort.
+        SharedPreferences prefs = getApplication().getApplicationContext().getSharedPreferences(getApplication().getString(R.string.SHARED_PREF_KEY), Context.MODE_PRIVATE);
+        String initialSort = prefs.getString("itemSort", "name");
+
+        switch (initialSort) {
+            case "name": {
+                return getAllItemsByName();
+            }
+            case "amount": {
+                return getAllItemsByAmount();
+            }
+            case "occurrence": {
+                return getAllItemsByNextOccurrence();
+            }
+            default:
+                return allItems;
+        }
     }
 
     public Flowable<List<Item>> getAllItemsByAmount() {
+        SharedPreferences prefs = getApplication().getApplicationContext().getSharedPreferences(getApplication().getString(R.string.SHARED_PREF_KEY), Context.MODE_PRIVATE);
+        prefs.edit().putString("itemSort", "amount").apply();
+
         allItems = repository.getAllItemsByAmount();
         return allItems;
     }
 
     public Flowable<List<Item>> getAllItemsByName() {
+        SharedPreferences prefs = getApplication().getApplicationContext().getSharedPreferences(getApplication().getString(R.string.SHARED_PREF_KEY), Context.MODE_PRIVATE);
+        prefs.edit().putString("itemSort", "name").apply();
+
         allItems = repository.getAllItemsByName();
         return allItems;
     }
 
     public Flowable<List<Item>> getAllItemsByNextOccurrence() {
+        SharedPreferences prefs = getApplication().getApplicationContext().getSharedPreferences(getApplication().getString(R.string.SHARED_PREF_KEY), Context.MODE_PRIVATE);
+        prefs.edit().putString("itemSort", "occurrence").apply();
+
         allItems = repository.getAllItemsByNextOccurrence();
         return allItems;
     }
