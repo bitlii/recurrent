@@ -7,4 +7,6 @@
     <string name="placeholder_item_next_occurrence">29 days</string>
     <string name="income">IN</string>
     <string name="expense">OUT</string>
+    <string name="SHARED_PREF_KEY">com.embit.recurrent.pref_file_key</string>
+    <string name="PREF_CURRENCY">localCurrency</string>
 </resources>

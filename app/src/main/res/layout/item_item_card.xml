@@ -103,6 +103,18 @@
                 android:textColor="?android:attr/textColorSecondary"
                 app:layout_constraintStart_toEndOf="@+id/name"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/currencySymbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:text="TextView"
+                android:textAlignment="textEnd"
+                app:layout_constraintBottom_toBottomOf="@+id/amount"
+                app:layout_constraintEnd_toStartOf="@+id/amount"
+                app:layout_constraintTop_toTopOf="@+id/amount"
+                tools:text="$" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>

@@ -1,8 +1,11 @@
 package com.embit.recurrent.activity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,6 +59,7 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         TextInputLayout nameLayout = findViewById(R.id.editItemName);
         TextInputLayout descriptionLayout = findViewById(R.id.editItemDescription);
         TextInputLayout amountLayout = findViewById(R.id.editAmount);
+        amountLayout.setPrefixText(this.getSharedPreferences(getString(R.string.SHARED_PREF_KEY), Context.MODE_PRIVATE).getString("localeSymbol", "$"));
         TextInputLayout intervalLayout = findViewById(R.id.editInterval);
         editDateLayout = findViewById(R.id.editDate);
 

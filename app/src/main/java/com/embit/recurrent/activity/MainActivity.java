@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Completable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -17,11 +16,12 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,8 +36,8 @@ import com.embit.recurrent.model.ItemViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Currency;
+import java.util.Locale;
 
 
 /**
@@ -64,7 +64,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        System.out.println("WHERE IS THIS AAAAAAAAAAAA");
+        // Set app wide currency symbol to phone's local.
+        Currency localeCurrency = Currency.getInstance(Locale.getDefault());
+        this.getSharedPreferences(getString(R.string.SHARED_PREF_KEY), Context.MODE_PRIVATE)
+                .edit()
+                .putString("localeSymbol", localeCurrency.getSymbol())
+                .apply();
+
+
         // Add new item.
         FloatingActionButton buttonAddItem = findViewById(R.id.fabAddItem);
         buttonAddItem.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         recycler = findViewById(R.id.itemRecycler);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setHasFixedSize(true);
-        itemAdapter = new ItemAdapter();
+        itemAdapter = new ItemAdapter(this.getSharedPreferences(getString(R.string.SHARED_PREF_KEY), Context.MODE_PRIVATE).getString("localeSymbol", "$"));
         recycler.setAdapter(itemAdapter);
 
         itemViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(ItemViewModel.class);
@@ -186,9 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 popupMenu.show();
             }
-
         });
-
 
 //        Notifications Testing.
 //        Intent intent = new Intent(this, BroadcastManager.class);

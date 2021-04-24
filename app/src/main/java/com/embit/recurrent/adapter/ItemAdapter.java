@@ -9,6 +9,8 @@ import com.embit.recurrent.R;
 import com.embit.recurrent.model.Item;
 import com.google.android.material.card.MaterialCardView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     private List<Item> itemList = new ArrayList<>();
 
+    private String currency;
+
+
+    public ItemAdapter(String currency) {
+        this.currency = currency;
+    }
+
     /**
      * Provides a reference to the type of views it is using.
      */
@@ -32,6 +41,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         private final TextView amount;
         private final TextView nextOccurrence;
         private final TextView transactionType;
+        private final TextView currencySymbol;
 
         public ViewHolder(View view) {
             super(view);
@@ -42,6 +52,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             amount = (TextView) view.findViewById(R.id.amount);
             nextOccurrence = (TextView) view.findViewById(R.id.nextOccurrence);
             transactionType = (TextView) view.findViewById(R.id.transactionType);
+            currencySymbol = (TextView) view.findViewById(R.id.currencySymbol);
         }
     }
 
@@ -49,9 +60,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_item_card, parent, false);
-
         return new ViewHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -61,6 +72,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.amount.setText(String.valueOf(item.getAmount()));
         holder.nextOccurrence.setText(item.getDaysUntilNextOccurrence() + " Days");
         holder.transactionType.setText(item.getType().name());
+        holder.currencySymbol.setText(currency);
     }
 
     @Override
