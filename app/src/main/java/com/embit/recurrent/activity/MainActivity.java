@@ -35,6 +35,7 @@ import com.embit.recurrent.model.Item;
 import com.embit.recurrent.model.ItemViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Currency;
 import java.util.Locale;
@@ -120,11 +121,24 @@ public class MainActivity extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 // Delete
                 if (direction == ItemTouchHelper.RIGHT) {
-                    Completable.fromRunnable(() -> itemViewModel.delete(itemAdapter.getItemAtPos(viewHolder.getAdapterPosition())))
+                    Item deletedItem = itemAdapter.getItemAtPos(viewHolder.getAdapterPosition());
+
+                    Completable.fromRunnable(() -> itemViewModel.delete(deletedItem))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe();
-                    Toast.makeText(MainActivity.this, "Item deleted.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(recycler, "Item was deleted.", Snackbar.LENGTH_SHORT)
+                            .setAction("Undo", new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View view) {
+                                    Completable.fromRunnable(() -> itemViewModel.insert(deletedItem))
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe();
+                                }
+                            })
+                            .show();
                 }
                 // Edit
                 else if (direction == ItemTouchHelper.LEFT) {
@@ -228,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe();
+            Toast.makeText(this, "Successfully edited item.", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -254,10 +269,6 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
     @Override
     protected void onDestroy() {
