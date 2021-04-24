@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.embit.recurrent.activity.MainActivity"
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
+        <activity
+            android:name=".activity.MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,12 +22,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.embit.recurrent.activity.AddEditItemActivity"
-            android:parentActivityName="com.embit.recurrent.activity.MainActivity" />
+            android:name=".activity.AddEditItemActivity"
+            android:parentActivityName=".activity.MainActivity" />
+
         <receiver
-            android:name="com.embit.recurrent.utils.BroadcastManager"
+            android:name=".utils.BroadcastManager"
             android:enabled="true" />
     </application>
-
 
 </manifest>

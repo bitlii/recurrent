@@ -18,13 +18,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -128,16 +126,11 @@ public class MainActivity extends AppCompatActivity {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe();
                     Snackbar.make(recycler, "Item was deleted.", Snackbar.LENGTH_SHORT)
-                            .setAction("Undo", new View.OnClickListener() {
-
-                                @Override
-                                public void onClick(View view) {
-                                    Completable.fromRunnable(() -> itemViewModel.insert(deletedItem))
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe();
-                                }
-                            })
+                            .setAction("Undo", view -> Completable.fromRunnable(() ->
+                                    itemViewModel.insert(deletedItem))
+                                                .subscribeOn(Schedulers.io())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe())
                             .show();
                 }
                 // Edit
@@ -167,47 +160,48 @@ public class MainActivity extends AppCompatActivity {
 
         // Sorting Chip
         Chip sortChip = findViewById(R.id.sortChip);
-        sortChip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-                MenuInflater inflater = popupMenu.getMenuInflater();
-                inflater.inflate(R.menu.menu_sort_items, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            // Sort Menu
-                            case R.id.sortAlphabetical:
-                                itemViewModel.getAllItemsByName()
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(itemList -> itemAdapter.setItemList(itemList));
-                                return true;
+        sortChip.setOnClickListener(view -> {
+            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+            MenuInflater inflater = popupMenu.getMenuInflater();
+            inflater.inflate(R.menu.menu_sort_items, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    // Sort Menu
+                    case R.id.sortAlphabetical:
+                        itemViewModel.getAllItemsByName()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(itemList -> itemAdapter.setItemList(itemList));
+                        return true;
 
-                            case R.id.sortAmount:
-                                itemViewModel.getAllItemsByAmount()
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(itemList -> itemAdapter.setItemList(itemList));
-                                return true;
+                    case R.id.sortAmount:
+                        itemViewModel.getAllItemsByAmount()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(itemList -> itemAdapter.setItemList(itemList));
+                        return true;
 
-                            case R.id.sortNextOccurrence:
-                                itemViewModel.getAllItemsByNextOccurrence()
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(itemList -> itemAdapter.setItemList(itemList));
-                                return true;
+                    case R.id.sortNextOccurrence:
+                        itemViewModel.getAllItemsByNextOccurrence()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(itemList -> itemAdapter.setItemList(itemList));
+                        return true;
 
-                            default:
-                                return false;
+                    default:
+                        return false;
 
-                        }
-                    }
-                });
-                popupMenu.show();
-            }
+                }
+            });
+            popupMenu.show();
         });
+
+        Chip settingsChip = findViewById(R.id.settingsChip);
+        settingsChip.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
+
 
 //        Notifications Testing.
 //        Intent intent = new Intent(this, BroadcastManager.class);
