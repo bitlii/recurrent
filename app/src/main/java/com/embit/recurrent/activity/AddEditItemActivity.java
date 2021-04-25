@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,15 +23,22 @@ import com.embit.recurrent.R;
 import com.embit.recurrent.fragment.DatePickerFragment;
 import com.embit.recurrent.model.Item;
 import com.embit.recurrent.model.TransactionType;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
 /**
@@ -44,6 +52,7 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
     private EditText editAmount;
     private EditText editInterval;
     private TextInputLayout spinnerLayout;
+    private TextInputLayout spinnerIntervalLengthLayout;
     private TextInputLayout editDateLayout;
 
     private LocalDate setDate;
@@ -54,7 +63,10 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextInputLayout nameLayout = findViewById(R.id.editItemName);
         TextInputLayout descriptionLayout = findViewById(R.id.editItemDescription);
@@ -66,6 +78,10 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         spinnerLayout = findViewById(R.id.spinnerTransactionType);
         ArrayAdapter adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, TransactionType.values());
 
+        spinnerIntervalLengthLayout = findViewById(R.id.spinnerIntervalLength);
+        Resources res = getResources();
+        ArrayAdapter intervalLengthAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, res.getStringArray(R.array.intervalLengths));
+
         editName = nameLayout.getEditText();
         editDescription = descriptionLayout.getEditText();
         editAmount = amountLayout.getEditText();
@@ -74,7 +90,7 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         Intent intent = getIntent();
         // If the activity was started by an edit event.
         if (intent.hasExtra(MainActivity.EXTRA_EDIT_ITEM)) {
-            setTitle("Edit Item");
+            getSupportActionBar().setTitle("Edit Item");
 
             Item item = intent.getParcelableExtra(MainActivity.EXTRA_EDIT_ITEM);
             assert item != null;
@@ -89,12 +105,15 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
             ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(adapter.getItem(item.getType().ordinal()).toString());
         }
         else {
-            setTitle("Add Item");
+            getSupportActionBar().setTitle("Add Item");
+
             editDateLayout.getEditText().setText(LocalDate.now().toString());
             setDate = LocalDate.now();
             ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(adapter.getItem(0).toString());
         }
+        ((AutoCompleteTextView) spinnerIntervalLengthLayout.getEditText()).setText(intervalLengthAdapter.getItem(0).toString());
         ((AutoCompleteTextView) spinnerLayout.getEditText()).setAdapter(adapter); // Set adapter after to fix android bug.
+        ((AutoCompleteTextView) spinnerIntervalLengthLayout.getEditText()).setAdapter(intervalLengthAdapter);
 
         editDateLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +157,14 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         int interval = Integer.parseInt(editInterval.getText().toString());
 
         TransactionType transactionType = TransactionType.valueOf(((AutoCompleteTextView) spinnerLayout.getEditText()).getText().toString());
+
+        String intervalLength = ((AutoCompleteTextView) spinnerIntervalLengthLayout.getEditText()).getText().toString();
+        if (intervalLength.equals("Weeks")) {
+            interval = interval * 7;
+        }
+        else if (intervalLength.equals("Months")) {
+            interval = (int) ChronoUnit.DAYS.between(setDate, setDate.plusMonths(interval));
+        }
 
 
         Item newItem = new Item(name, description, amount, transactionType, setDate, interval);
