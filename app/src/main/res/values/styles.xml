@@ -20,12 +20,5 @@
         <item name="boxCornerRadiusBottomStart">16dp</item>
         <item name="boxCornerRadiusBottomEnd">16dp</item>
     </style>
-    <style name="ToolBarRounded" parent="">
-        <item name="shapeAppearance">@drawable/curved_toolbar</item>
-        <item name="boxCornerRadiusTopStart">16dp</item>
-        <item name="boxCornerRadiusTopEnd">16dp</item>
-        <item name="boxCornerRadiusBottomStart">16dp</item>
-        <item name="boxCornerRadiusBottomEnd">16dp</item>
-    </style>
 
 </resources>

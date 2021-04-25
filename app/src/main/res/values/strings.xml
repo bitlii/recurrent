@@ -7,7 +7,6 @@
     <string name="income">INCOME</string>
     <string name="expense">EXPENSE</string>
     <string name="title_activity_settings">SettingsActivity</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="chip_settings_text">Settings</string>
     <string name="github_link">https://github.com/bitlii/recurrent</string>
     <string name="itemCard_nextOccurrence">Next In</string>
