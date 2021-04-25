@@ -22,6 +22,9 @@ import com.embit.recurrent.R;
 import com.embit.recurrent.fragment.DatePickerFragment;
 import com.embit.recurrent.model.Item;
 import com.embit.recurrent.model.TransactionType;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -31,6 +34,7 @@ import java.time.LocalDate;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
 /**
@@ -54,7 +58,10 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextInputLayout nameLayout = findViewById(R.id.editItemName);
         TextInputLayout descriptionLayout = findViewById(R.id.editItemDescription);
@@ -74,7 +81,7 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
         Intent intent = getIntent();
         // If the activity was started by an edit event.
         if (intent.hasExtra(MainActivity.EXTRA_EDIT_ITEM)) {
-            setTitle("Edit Item");
+            getSupportActionBar().setTitle("Edit Item");
 
             Item item = intent.getParcelableExtra(MainActivity.EXTRA_EDIT_ITEM);
             assert item != null;
@@ -89,7 +96,8 @@ public class AddEditItemActivity extends AppCompatActivity implements DatePicker
             ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(adapter.getItem(item.getType().ordinal()).toString());
         }
         else {
-            setTitle("Add Item");
+            getSupportActionBar().setTitle("Add Item");
+
             editDateLayout.getEditText().setText(LocalDate.now().toString());
             setDate = LocalDate.now();
             ((AutoCompleteTextView) spinnerLayout.getEditText()).setText(adapter.getItem(0).toString());

@@ -3,28 +3,16 @@
     <string name="placeholder_item_name">Item Name</string>
     <string name="placeholder_item_description">A short description of the item.</string>
     <string name="placeholder_item_amount">29.99</string>
-    <string name="item_next">Next</string>
     <string name="placeholder_item_next_occurrence">29 days</string>
-    <string name="income">IN</string>
-    <string name="expense">OUT</string>
-    <string name="SHARED_PREF_KEY">com.embit.recurrent.pref_file_key</string>
-    <string name="PREF_CURRENCY">localCurrency</string>
+    <string name="income">INCOME</string>
+    <string name="expense">EXPENSE</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="chip_settings_text">Settings</string>
     <string name="github_link">https://github.com/bitlii/recurrent</string>
+    <string name="itemCard_nextOccurrence">Next In</string>
+
+    <!-- Shared Preference Key Strings -->
+    <string name="SHARED_PREF_KEY">com.embit.recurrent.pref_file_key</string>
+    <string name="PREF_CURRENCY">localCurrency</string>
 </resources>
