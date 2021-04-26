@@ -3,7 +3,9 @@ package com.embit.recurrent.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,15 +72,26 @@ public class MainActivity extends AppCompatActivity {
                 .putString("localeSymbol", localeCurrency.getSymbol())
                 .apply();
 
+        // Check Theme
+        switch (PreferenceManager.getDefaultSharedPreferences(this).getString("theme_pref", "")) {
+            case "Light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "Dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            default:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+        }
+
+
 
         // Add new item.
         FloatingActionButton buttonAddItem = findViewById(R.id.fabAddItem);
-        buttonAddItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddEditItemActivity.class);
-                startActivityForResult(intent, ADD_ITEM_REQUEST);
-            }
+        buttonAddItem.setOnClickListener(view -> {
+            Intent intent = new Intent(view.getContext(), AddEditItemActivity.class);
+            startActivityForResult(intent, ADD_ITEM_REQUEST);
         });
 
         /// Recycler View
@@ -243,25 +256,25 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    /**
-     * Create a new notification channel, but only on API 26+.
-     * @return notification manager, if device API is 26+.
-     */
-    private NotificationManager createNotificationChannel() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String description = "Main Channel";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-            NotificationChannel channel = new NotificationChannel("channel1", CHANNEL_ID, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-            return notificationManager;
-        }
-        return null;
-    }
+//    /** Reimplementing notifications at a later time.
+//     * Create a new notification channel, but only on API 26+.
+//     * @return notification manager, if device API is 26+.
+//     */
+//    private NotificationManager createNotificationChannel() {
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            String description = "Main Channel";
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//
+//            NotificationChannel channel = new NotificationChannel("channel1", CHANNEL_ID, importance);
+//            channel.setDescription(description);
+//
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(channel);
+//            return notificationManager;
+//        }
+//        return null;
+//    }
 
 
     @Override
