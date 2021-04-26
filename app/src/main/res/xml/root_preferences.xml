@@ -7,7 +7,8 @@
             android:entries="@array/themePreference"
             android:entryValues="@array/themePreference"
             android:key="theme_pref"
-            android:title="App Theme" />
+            android:title="App Theme"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
     <PreferenceCategory android:title="About ">
         <Preference
