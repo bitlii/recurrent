@@ -39,6 +39,7 @@ public class Item implements Parcelable {
         this.type = type;
         this.interval = interval;
 
+        // Check if the set initial date is before or after the day they create the item.
         LocalDate now = LocalDate.now();
         if (now.isBefore(lastOccurrence)) {
             this.lastOccurrence = lastOccurrence.minusDays(interval);

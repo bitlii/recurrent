@@ -73,12 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Add new item.
         FloatingActionButton buttonAddItem = findViewById(R.id.fabAddItem);
-        buttonAddItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddEditItemActivity.class);
-                startActivityForResult(intent, ADD_ITEM_REQUEST);
-            }
+        buttonAddItem.setOnClickListener(view -> {
+            Intent intent = new Intent(view.getContext(), AddEditItemActivity.class);
+            startActivityForResult(intent, ADD_ITEM_REQUEST);
         });
 
         /// Recycler View
@@ -243,25 +240,25 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    /**
-     * Create a new notification channel, but only on API 26+.
-     * @return notification manager, if device API is 26+.
-     */
-    private NotificationManager createNotificationChannel() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String description = "Main Channel";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-            NotificationChannel channel = new NotificationChannel("channel1", CHANNEL_ID, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-            return notificationManager;
-        }
-        return null;
-    }
+//    /** Reimplementing notifications at a later time.
+//     * Create a new notification channel, but only on API 26+.
+//     * @return notification manager, if device API is 26+.
+//     */
+//    private NotificationManager createNotificationChannel() {
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            String description = "Main Channel";
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//
+//            NotificationChannel channel = new NotificationChannel("channel1", CHANNEL_ID, importance);
+//            channel.setDescription(description);
+//
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(channel);
+//            return notificationManager;
+//        }
+//        return null;
+//    }
 
 
     @Override
