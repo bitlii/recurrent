@@ -11,8 +11,8 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="About ">
         <Preference
-            app:summary="Source code, terms and privacy policy can be found here."
-            app:title="Github">
+            app:summary="Code, privacy policy, and others can be found at our github page."
+            app:title="Source Code">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/github_link" />
