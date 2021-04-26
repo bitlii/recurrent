@@ -2,6 +2,11 @@
 
 Recurrent is a simple, basic, and easy to use tool to track regularly occurring expenses and income.
 
+## Third-Party Dependencies
+
+* it.xabaras.android:recyclerview-swipedecorator
+    >Apache 2.0 License
+
 
 ## Privacy Policy
 
