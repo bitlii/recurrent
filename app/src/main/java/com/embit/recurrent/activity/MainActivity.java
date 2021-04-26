@@ -3,7 +3,9 @@ package com.embit.recurrent.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,6 +71,20 @@ public class MainActivity extends AppCompatActivity {
                 .edit()
                 .putString("localeSymbol", localeCurrency.getSymbol())
                 .apply();
+
+        // Check Theme
+        switch (PreferenceManager.getDefaultSharedPreferences(this).getString("theme_pref", "")) {
+            case "Light":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "Dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            default:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+        }
+
 
 
         // Add new item.
