@@ -130,7 +130,9 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textLongMessage" />
+                    android:inputType="textLongMessage|textMultiLine"
+                    android:maxLength="150"
+                    android:minLines="2" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
