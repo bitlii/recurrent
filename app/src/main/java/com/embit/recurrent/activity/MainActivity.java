@@ -16,21 +16,15 @@ import io.reactivex.schedulers.Schedulers;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.graphics.Path;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.embit.recurrent.R;
@@ -39,7 +33,6 @@ import com.embit.recurrent.model.Item;
 import com.embit.recurrent.model.ItemViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -279,6 +272,12 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        itemUpdateOccurrenceDisposable.dispose();
+        getItemsDisposable.dispose();
+    }
 
 
 //    /** Reimplementing notifications at a later time.
@@ -302,10 +301,5 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        itemUpdateOccurrenceDisposable.dispose();
-        getItemsDisposable.dispose();
-    }
+
 }

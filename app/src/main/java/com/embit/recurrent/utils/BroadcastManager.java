@@ -17,7 +17,7 @@ public class BroadcastManager extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "channel1")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Test Title")
                 .setContentText("Testing Text")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
