@@ -21,11 +21,15 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Path;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -33,6 +37,8 @@ import com.embit.recurrent.R;
 import com.embit.recurrent.adapter.ItemAdapter;
 import com.embit.recurrent.model.Item;
 import com.embit.recurrent.model.ItemViewModel;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -64,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MaterialToolbar toolbar = findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
 
         // Set app wide currency symbol to phone's local.
         Currency localeCurrency = Currency.getInstance(Locale.getDefault());
@@ -171,50 +180,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(recycler);
 
-        // Sorting Chip
-        Chip sortChip = findViewById(R.id.sortChip);
-        sortChip.setOnClickListener(view -> {
-            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-            MenuInflater inflater = popupMenu.getMenuInflater();
-            inflater.inflate(R.menu.menu_sort_items, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(menuItem -> {
-                switch (menuItem.getItemId()) {
-                    // Sort Menu
-                    case R.id.sortAlphabetical:
-                        itemViewModel.getAllItemsByName()
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(itemList -> itemAdapter.setItemList(itemList));
-                        return true;
-
-                    case R.id.sortAmount:
-                        itemViewModel.getAllItemsByAmount()
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(itemList -> itemAdapter.setItemList(itemList));
-                        return true;
-
-                    case R.id.sortNextOccurrence:
-                        itemViewModel.getAllItemsByNextOccurrence()
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(itemList -> itemAdapter.setItemList(itemList));
-                        return true;
-
-                    default:
-                        return false;
-
-                }
-            });
-            popupMenu.show();
-        });
-
-        Chip settingsChip = findViewById(R.id.settingsChip);
-        settingsChip.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        });
-
 
 //        Notifications Testing.
 //        Intent intent = new Intent(this, BroadcastManager.class);
@@ -252,6 +217,66 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Successfully edited item.", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    // ----- App Bar Menu
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.main_menu_sort) {
+            showBottomSheetDialog();
+            return true;
+        }
+        else if (item.getItemId() == R.id.main_menu_settings) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @SuppressLint("CheckResult")
+    private void showBottomSheetDialog() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(R.layout.bottomsheet_sort_items_dialog);
+
+        LinearLayout sortAlphabetical = bottomSheetDialog.findViewById(R.id.bottomsheet_sort_alphabetical);
+        sortAlphabetical.setOnClickListener(view -> {
+            itemViewModel.getAllItemsByName()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(itemList -> itemAdapter.setItemList(itemList));
+            bottomSheetDialog.dismiss();
+        });
+        LinearLayout sortAmount = bottomSheetDialog.findViewById(R.id.bottomsheet_sort_amount);
+        sortAmount.setOnClickListener(view -> {
+            itemViewModel.getAllItemsByAmount()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(itemList -> itemAdapter.setItemList(itemList));
+            bottomSheetDialog.dismiss();
+        });
+
+
+        LinearLayout sortNextOccurrence = bottomSheetDialog.findViewById(R.id.bottomsheet_sort_nextOccurrence);
+        sortNextOccurrence.setOnClickListener(view -> {
+            itemViewModel.getAllItemsByNextOccurrence()
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(itemList -> itemAdapter.setItemList(itemList));
+            bottomSheetDialog.dismiss();
+        });
+
+
+        bottomSheetDialog.show();
     }
 
 
