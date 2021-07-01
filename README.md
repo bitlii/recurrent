@@ -1,4 +1,4 @@
-## <img src="https://user-images.githubusercontent.com/19967245/115955742-958bd980-a54c-11eb-844c-ea455affde3a.jpeg" width=200 height=200>
+## <img src="https://user-images.githubusercontent.com/19967245/115955742-958bd980-a54c-11eb-844c-ea455affde3a.jpeg" width=200 height=200> <a href='https://play.google.com/store/apps/details?id=com.embit.recurrent&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height="75" /></a>
 
 Recurrent is a simple, basic, and easy to use tool to track regularly occurring expenses and income.
 
